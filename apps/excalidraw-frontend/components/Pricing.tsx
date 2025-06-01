@@ -1,3 +1,4 @@
+'use client'
 import { Check, Shield } from 'lucide-react'
 
 const tiers = [

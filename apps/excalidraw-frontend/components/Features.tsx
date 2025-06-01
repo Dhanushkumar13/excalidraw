@@ -1,3 +1,4 @@
+'use client'
 import { Pen, Users, Zap, Globe } from 'lucide-react'
 
 const features = [

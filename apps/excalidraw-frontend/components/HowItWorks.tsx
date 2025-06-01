@@ -1,3 +1,4 @@
+'use client'
 import { CheckCircle, Mail, PencilRuler, ExternalLink, Presentation } from 'lucide-react';
 import Image from 'next/image';
 const iconComponents = {

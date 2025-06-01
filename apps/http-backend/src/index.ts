@@ -80,9 +80,15 @@ app.post('/signin',async(req,res)=>{
     localStorage.setItem("userId", user.id);
     localStorage.setItem("token", token);
 
-    res.json({
-        token: token
-    })
+    const username = user?.name;
+    const userId = user?.id;
+
+    res.status(200).json({
+        token,
+        username,
+        userId
+    });
+
    }
    else{
     res.status(403).json({

@@ -4,12 +4,23 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { HTTP_BACKEND, CANVAS_URL } from "../../../config";
+import {
+    setSession,
+    setToken,
+    setUserId,
+    setUsername,
+} from "../../../../../packages/store/src/userSlice";
 export default function SigninPage() {
+    const dispatch = useDispatch();
     const router = useRouter();
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-    });    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
@@ -22,12 +33,20 @@ export default function SigninPage() {
                     email: formData.email,
                     password: formData.password,
                 };
-                const response = await axios.post("/signin", data);
-                toast.success("Logged in successfully");
-                router.push("/canvas");
+                const response = await axios.post(`${HTTP_BACKEND}/signin`, data);
+                if (response.status === 200) {
+                    localStorage.setItem("token", response.data.token);
+                    localStorage.setItem("userId", response.data.userId);
+                    localStorage.setItem("username", response.data.username);
+                    dispatch(setSession(true));
+                    toast.success("Logged in successfully");
+                    router.push("/create-room");
+                } else if (response.status === 403) {
+                    toast.error("Invalid credentials");
+                }
             } catch (error) {
                 // TODO: Handle specific errors
-                toast.error("Invalid credentials");
+                toast.error("Something went wrong, please try again");
             }
         }
     };
@@ -74,7 +93,7 @@ export default function SigninPage() {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full px-3 py-2 text-zinc-900 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     placeholder="Enter your email"
                                 />
                             </div>
@@ -91,7 +110,7 @@ export default function SigninPage() {
                                     name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full px-3 py-2 border text-zinc-900 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     placeholder="Enter your password"
                                 />
                             </div>
@@ -99,6 +118,7 @@ export default function SigninPage() {
                                 <button
                                     type="submit"
                                     className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none sm:text-sm font-medium"
+                                    onClick={()=> router.push(`${CANVAS_URL}/canvas/3`)}
                                 >
                                     Login
                                 </button>
