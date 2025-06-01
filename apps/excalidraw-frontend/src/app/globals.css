@@ -62,3 +62,25 @@
     @apply bg-background text-foreground border-border;
   }
 }
+
+.cursor-hand {
+  cursor: grab;
+}
+.cursor-pencil {
+  cursor: crosshair;
+}
+.cursor-rect {
+  cursor: crosshair;
+}
+.cursor-circle {
+  cursor: crosshair;
+}
+.cursor-erase {
+  cursor: url('../../assets/icons8-eraser-64.png'), auto;
+}
+.cursor-clear {
+  cursor: not-allowed;
+}
+.cursor-point {
+  cursor: url('../../assets/icons8-select-cursor-48.png'), auto;
+}

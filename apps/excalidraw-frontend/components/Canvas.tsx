@@ -1,18 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import { initDraw } from "../draw";
 import { IconButton } from "./IconButton";
-import { Minus, Plus } from "lucide-react";
 import {
     Circle,
     Pencil,
     Square,
+    Eraser,
+    Grab,
+    Hand,
+    Minus,
+    MousePointer,
+    Plus,
+    Redo2,
+    SquareDashedMousePointer,
+    Trash2,
+    Undo2,
+    ZoomIn,
+    ZoomOut,
 } from "lucide-react";
 
-// import { Game } from "@/draw/Game";
-// If you need Game, update the path below to the correct relative path, for example:
 import { Game } from "../draw/Game";
 
-export type Tool = "circle" | "rect" | "pencil";
+export type Tool =
+    | "point"
+    | "circle"
+    | "rect"
+    | "pencil"
+    | "clear"
+    | "erase"
+    | "undo"
+    | "redo"
+    | "hand"
+    ;
 
 export const colors = [
     { hex: "#000000", name: "Black" },
@@ -35,12 +54,42 @@ export default function Canvas({
 }){
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [game, setGame] = useState<Game>();
+     const [zoom, setZoom] = useState(75);
     const [selectedTool, setSelectedTool] = useState<Tool>("circle");
     const [selectedColor, setSelectedColor] = useState(colors[0]);
     const [strokeWidth, setStrokeWidth] = useState<number>(1);
 
+     const handleUndo = () => {
+        game?.undo();
+    };
+
+    const handleRedo = () => {
+        game?.redo();
+    };
+
+    const increaseZoom = () => {
+        setZoom(zoom + 2);
+        game?.inc();
+    }
+
+    const decreaseZoom = () => {
+        setZoom(zoom - 2);
+        game?.dec();
+    }
+
+    // Update the canvas cursor when the selected tool changes
     useEffect(() => {
-        game?.setTool(selectedTool);
+        if (canvasRef.current) {
+            const cursorClass = `cursor-${selectedTool}`;
+            canvasRef.current.className = cursorClass;
+        }
+    }, [selectedTool]);
+
+
+    useEffect(() => {
+        if (selectedTool === "circle" || selectedTool === "rect" || selectedTool === "pencil") {
+            game?.setTool(selectedTool);
+        }
     }, [selectedTool, game]);
 
     useEffect(()=>{
@@ -58,27 +107,80 @@ export default function Canvas({
     },[canvasRef])
 
     return (
-        <div
-            style={{
-                height: "100vh",
-                overflow: "hidden",
+        <>
+                <div
+                    style={{
+                        height: "100vh",
+                        overflow: "hidden",
+                    }}
+                >
+                <canvas
+                    ref={canvasRef}
+                    width={window.innerWidth}
+                    height={window.innerHeight}
+                    className="custom-cursor"
+                >
+                </canvas>
+                <Topbar
+                    setSelectedTool={setSelectedTool}
+                    selectedTool={selectedTool}
+                    selectedColor={selectedColor}
+                    setSelectedColor={setSelectedColor}
+                    strokeWidth={strokeWidth}
+                    setStrokeWidth={setStrokeWidth}
+                />
+            </div>
+            <div style={{
+                position: "fixed",
+                bottom: 26,
+                left: "20%",
+                transform: "translateX(-50%)",
             }}
-        >
-            <canvas
-                ref={canvasRef}
-                width={window.innerWidth}
-                height={window.innerHeight}
+            className="text-gray-400 rounded-sm flex items-center justify-center max-w-auto gap-5">
+                 <button onClick={handleUndo} type="button"
+                    className="cursor-pointer text-gray-200 hover:text-indigo-400"
+                >
+                    <Undo2 />
+                </button>
+
+                <span className="text-sm text-zinc-600"> | </span>
+                <button onClick={handleRedo} type="button"
+                    className="cursor-pointer text-gray-200 hover:text-indigo-300"
+                >
+                    <Redo2 />
+                </button>
+            </div>
+            <div
+                style={{
+                    position: "fixed",
+                    bottom: 15,
+                    left: "10%",
+                    transform: "translateX(-50%)",
+                    padding: "10px",
+                    borderRadius: "10px",
+                }}
+                className="bg-zinc-900 text-white/80 rounded-lg flex items-center justify-center gap-4 max-w-auto"
             >
-            </canvas>
-            <Topbar
-                setSelectedTool={setSelectedTool}
-                selectedTool={selectedTool}
-                selectedColor={selectedColor}
-                setSelectedColor={setSelectedColor}
-                strokeWidth={strokeWidth}
-                setStrokeWidth={setStrokeWidth}
-            />
-        </div>
+                <button
+                    onClick={decreaseZoom}
+                    type="button"
+                    className="pl-4 pr-4 cursor-pointer"
+                >
+                    <Minus />
+                </button>
+                <p className="text-sm">
+                    {zoom}%
+                </p>
+                <button
+                    onClick={increaseZoom}
+                    type="button"
+                    className="pl-4 pr-4 cursor-pointer"
+                >
+                    <Plus />
+                </button>
+            </div>
+        </>
+        
     );
 }
 
@@ -100,58 +202,79 @@ function Topbar(
     },
 ) {
     return (
-        <div
-            style={{
-                position: "fixed",
-                top: 10,
-                left: 10,
-            }}
-        >
-            <div className="flex gap-t items-center justify-center bg-gray-950 border border-gray-700 rounded-xl px-4 py-2">
-                <IconButton activated={selectedTool === 'pencil'} icon={<Pencil/>} onClick={()=>{setSelectedTool('pencil')}}></IconButton>
-                <IconButton activated={selectedTool === 'rect'} icon={<Square/>} onClick={()=>{setSelectedTool('rect')}}></IconButton>
-                <IconButton activated={selectedTool === 'circle'}icon={<Circle/>} onClick={()=>{setSelectedTool('circle')}}></IconButton>
-                 <label htmlFor="color" className="text-gray-100 font-medium">
-                    Stroke color 
-                </label>
-                <select
-                    id="color"
-                    value={selectedColor.hex}
-                    onChange={(e) =>
-                        setSelectedColor(
-                            colors.find((color) =>
-                                color.hex === e.target.value
-                            ) || colors[0],
-                        )}
-                    style={{
-                        backgroundColor: selectedColor.hex,
-                        cursor: "pointer",
-                    }}
-                    className="rounded-xl border border-gray-700 py-1 text-gray-200"
-                >
-                    {colors.map((color) => (
-                        <option key={color.hex} value={color.hex}>
-                            {color.name}
-                        </option>
-                    ))}
-                </select>
-                <div className="flex gap-1 pl-4">
-                    <label className="text-gray-100 text-md font-medium">
-                        Stroke width
-                    </label>
-                    <div className="flex gap-1">
-                        <Plus
-                            onClick={() => setStrokeWidth(strokeWidth + 1)}
-                            className="border border-gray-700 rounded-md text-gray-200 bg-slate-600"
-                        />
-                        <Minus
-                            onClick={() => setStrokeWidth(strokeWidth - 1)}
-                            className="border border-gray-700 rounded-md text-gray-200 bg-slate-600"
-                        />
-                        <span className="font-normal font-mono text-gray-100">{strokeWidth}px</span>
-                    </div>
+              <>
+            <div
+                style={{
+                    position: "fixed",
+                    top: 10,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                }}
+            >
+                <div className="flex gap-2 items-center justify-center bg-zinc-900 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-90 rounded-lg px-4 py-2 text-xs font-mono">
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTool("point");
+                        }}
+                        activated={selectedTool === "point"}
+                        icon={<MousePointer />}
+                    />
+
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTool("hand");
+                        }}
+                        activated={selectedTool === "hand"}
+                        icon={<Hand />}
+                    />
+
+
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTool("pencil");
+                        }}
+                        activated={selectedTool === "pencil"}
+                        icon={<Pencil />}
+                    />
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTool("rect");
+                        }}
+                        activated={selectedTool === "rect"}
+                        icon={<Square />}
+                    >
+                    </IconButton>
+
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTool("circle");
+                        }}
+                        activated={selectedTool === "circle"}
+                        icon={<Circle />}
+                    >
+                    </IconButton>
+
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTool("erase");
+                        }}
+                        activated={selectedTool === "erase"}
+                        icon={<Eraser />}
+                    >
+                    </IconButton>
+
+                    <span className="opacity-50 text-gray-300">|</span>
+
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTool("clear");
+                        }}
+                        activated={selectedTool === "clear"}
+                        icon={<Trash2 />}
+                    >
+                    </IconButton>
                 </div>
-            </div>
-        </div>  
+        </div>
+        </>
     );
 }

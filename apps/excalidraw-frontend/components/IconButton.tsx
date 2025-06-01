@@ -8,6 +8,5 @@ export function IconButton({
     onClick: ()=> void,
     activated: boolean
 }){
-return <div className={`m-2 pointer rounded-full border border-gray-700 p-2 bg-black hover:bg-gray ${activated ? "text-indigo-400" : "text-white/80"}`} onClick={onClick}>        {icon}
-    </div>
-}
+ return <div className={`cursor-pointer rounded-md text-xs p-2 hover:bg-gray ${activated ? "text-indigo-100 bg-indigo-500/60" : "text-gray-500"}`} onClick={onClick}>        {icon}
+    </div>}

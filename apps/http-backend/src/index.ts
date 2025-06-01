@@ -56,8 +56,7 @@ app.post('/signin',async(req,res)=>{
         where:{
             email: parsedData.data.email
         }
-   })
-   console.log(user);
+   });
 
    if(!user){
     res.json({
@@ -77,6 +76,9 @@ app.post('/signin',async(req,res)=>{
         "Set-Cookie",
         `token=${token}; HttpOnly; Secure; Path=/; SameSite=Strict`,
     )
+
+    localStorage.setItem("userId", user.id);
+    localStorage.setItem("token", token);
 
     res.json({
         token: token
