@@ -1,9 +1,9 @@
 import { RoomCanvas as CanvasComponent } from "../../../../components/RoomCanvas"
 
 export default async function Canvas({params}:{
-    params:{
+    params: Promise<{
         roomId: string
-    }
+    }>
 }){
 
     const roomId = (await params).roomId

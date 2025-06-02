@@ -3,38 +3,25 @@ import { toast } from "react-toastify";
 import { IconButton } from "./IconButton";
 import { Color, Theme, Tool } from "./Canvas";
 import {
-    AlignJustify,
     Circle,
     Diamond,
     Eraser,
-    Grab,
     Hand,
     Minus,
-    Moon,
-    MousePointer,
     MousePointer2,
     MoveRight,
     Pencil,
-    Plus,
-    Redo2,
     Square,
     SquareDashedMousePointer,
-    Sun,
     Trash2,
     TypeOutline,
-    Undo2,
     UsersRound,
-    ZoomIn,
-    ZoomOut,
 } from "lucide-react";
 export function Topbar(
     {
         selectedTool,
         setSelectedTool,
-        selectedColor,
-        setSelectedColor,
         theme,
-        setTheme,
     }: {
         selectedTool: Tool;
         setSelectedTool: (s: Tool) => void;
@@ -46,7 +33,7 @@ export function Topbar(
 ) {
     const [isCopied, setIsCopied] = useState(false);
     const [collaborativeMode, setCollaborativeMode] = useState(false);
-
+    console.log(isCopied)
     const handleCopy = () => {
         const currentUrl = window.location.href; // Get the current URL
         navigator.clipboard.writeText(currentUrl) // Copy URL to clipboard

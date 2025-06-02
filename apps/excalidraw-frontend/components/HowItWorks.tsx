@@ -39,7 +39,7 @@ export default function HowItWorks() {
 
             <dl className="mt-10 space-y-10">
               {steps.map((step) => {
-                //@ts-ignore
+                //@ts-expect-error:step.icon is a string, but we trust it matches keys in iconComponents
                 const IconComponent = iconComponents[step.icon];
                 return (
                   <div key={step.name} className="relative">

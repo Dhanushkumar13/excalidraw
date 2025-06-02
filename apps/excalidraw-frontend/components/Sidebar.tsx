@@ -1,12 +1,11 @@
 
-import { Color, Theme, Tool } from "./Canvas";
+import { Color, Theme } from "./Canvas";
 import { useState } from "react";
 import { colors } from "./Canvas";
 export function ColorSelector({
     selectedColor,
     setSelectedColor,
     theme,
-    setTheme,
     title,
 }: {
     selectedColor: Color;

@@ -1,7 +1,7 @@
 "use client";
 
 import { WS_URL } from "../config";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Canvas } from "./Canvas";
 
 export function RoomCanvas({ roomId }: { roomId: string }) {
@@ -21,7 +21,11 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
             console.log(data);
             ws.send(data);
         };
-    }, []);
+        return () => {
+        ws.close();
+    };
+
+    }, [roomId, tokenValStore]);
 
     if (!socket) {
         return (

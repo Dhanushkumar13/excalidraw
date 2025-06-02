@@ -8,9 +8,6 @@ import { useDispatch } from "react-redux";
 import { HTTP_BACKEND, CANVAS_URL } from "../../../config";
 import {
     setSession,
-    setToken,
-    setUserId,
-    setUsername,
 } from "../../../../../packages/store/src/userSlice";
 export default function SigninPage() {
     const dispatch = useDispatch();
@@ -46,6 +43,7 @@ export default function SigninPage() {
                 }
             } catch (error) {
                 // TODO: Handle specific errors
+                console.log(error);
                 toast.error("Something went wrong, please try again");
             }
         }
@@ -68,7 +66,7 @@ export default function SigninPage() {
                                 Sign in to your account
                             </h1>
                             <p className="text-gray-600 text-sm mt-2">
-                                Don't have an account?{" "}
+                                Don&rsquo;t have an account?{" "}
                                 <span
                                     className="cursor-pointer underline"
                                     onClick={() => {

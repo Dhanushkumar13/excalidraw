@@ -29,6 +29,7 @@ export default function SignupPage() {
                     password: formData.password,
                 };
                 const response = await axios.post("/signup", data);
+                console.log(response);
                 toast.success("Registered successfully");
                 router.push("/signin");
             } catch (error) {

@@ -2,36 +2,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Topbar } from "./Toolbar";
 import { ColorSelector } from "./Sidebar";
-import { IconButton } from "./IconButton";
-import { useRouter } from "next/navigation";
 import {
     AlignJustify,
-    Diamond,
-    Eraser,
-    Grab,
-    Hand,
     Minus,
     Moon,
-    MousePointer,
-    MousePointer2,
-    MoveRight,
     Plus,
     Redo2,
-    SquareDashedMousePointer,
     Sun,
-    Trash2,
-    TypeOutline,
     Undo2,
-    UsersRound,
-    ZoomIn,
-    ZoomOut,
-    Circle,
-    Pencil,
-    Square,
 } from "lucide-react";
 
 import { Game } from "../draw/Game";
-import { toast } from "react-toastify";
 
 export type Tool =
     | "circle"
@@ -139,7 +120,7 @@ export function Canvas({
                 g.destroy();
             };
         }
-    }, [canvasRef]);
+    }, [canvasRef, roomId, socket]);
 
     useEffect(() => {
         const handleResize = () => {

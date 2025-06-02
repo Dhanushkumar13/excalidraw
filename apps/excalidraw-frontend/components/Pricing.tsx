@@ -1,5 +1,5 @@
 'use client'
-import { Check, Shield } from 'lucide-react'
+import { Check } from 'lucide-react'
 
 const tiers = [
   {
@@ -47,7 +47,7 @@ export default function Pricing() {
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 sm:text-4xl lg:text-5xl">Plans for teams of all sizes</h2>
             <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">
-              Choose an affordable plan that's packed with the best features for your needs.
+              Choose an affordable plan that&rsquo;s packed with the best features for your needs.
             </p>
           </div>
         </div>

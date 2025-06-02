@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { Pen } from 'lucide-react'
 
 export default function Footer() {
   return (
