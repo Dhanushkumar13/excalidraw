@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@repo/store": "workspace:*",
-    "@repo/ui": "workspace:*",
     "axios": "^1.8.4",
     "lucide-react": "^0.501.0",
     "next": "15.3.1",
