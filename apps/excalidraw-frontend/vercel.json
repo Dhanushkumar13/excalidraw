@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "apps/excalidraw-frontend": {
+      "framework": "nextjs"
+    }
+  },
+  "buildCommand": "turbo run build --filter=excalidraw-frontend...",
+  "installCommand": "npm install",
+  "outputDirectory": "apps/excalidraw-frontend/.next"
+}
